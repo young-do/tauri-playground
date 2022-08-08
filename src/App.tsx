@@ -1,32 +1,40 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { Command, open } from '@tauri-apps/api/shell';
 import './App.css'
 
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [domain, setDomain] = useState('')
+  const [port, setPort] = useState('')
+  const [stdout, setStdout] = useState('')
+  const [udp, setUdp] = useState(false) 
+
+  const testCommand = async () => {
+    // open('https://github.com/tauri-apps/tauri')
+
+    // @note: udp 체크는 super user 권한으로만 체크 가능...
+    // const cmd = new Command('nmap', [`${udp ? '-sU' : ''} -p ${port}`, domain])
+    const cmd = new Command('nmap', [`-p ${port}`, domain])
+    const output = await cmd.execute()
+    console.log(output)
+    setStdout(output.stdout)
+  }
 
   return (
     <div className="App">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input type="text" value={domain} onChange={e => setDomain(e.target.value)} placeholder="Enter domain or ip" autoCapitalize='false'/>
+        <br/>
+        <input type="text" value={port} onChange={e => setPort(e.target.value)} placeholder="Enter port" autoCapitalize='false' />
+        {/* <br/>
+        UDP: <input type="checkbox" checked={udp} onChange={e => setUdp(e.target.checked)} /> */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div>
+        <button onClick={testCommand}>
+          run nmap
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <textarea value={stdout} readOnly></textarea>
     </div>
   )
 }
