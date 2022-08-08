@@ -13,8 +13,8 @@ src-tauri/tauri.conf.json 파일에 shell 필드 추가
 
 ```json
 {
-	...
-	"tauri": {
+  // ...
+  "tauri": {
     "allowlist": {
       "all": true,
       "shell": {
@@ -35,8 +35,8 @@ src-tauri/tauri.conf.json 파일에 shell 필드 추가
           }
         ]
       }
-    },
-	...
+    }
+  }
 }
 ```
 
